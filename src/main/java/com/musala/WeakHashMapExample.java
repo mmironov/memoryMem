@@ -1,9 +1,9 @@
 package com.musala;
 
-import com.sun.tools.javac.util.Assert;
-
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
+
+import static org.awaitility.Awaitility.await;
 
 public class WeakHashMapExample {
 
@@ -19,7 +19,11 @@ public class WeakHashMapExample {
         imageName = null;
         System.gc();
 
-        System.out.println("key exists: " + map.containsKey(imageName));
+        await().atMost(10, TimeUnit.SECONDS).until(map::isEmpty);
+
+        if (map.isEmpty()) {
+            System.out.println("Map was emptied.");
+        }
     }
 }
 
